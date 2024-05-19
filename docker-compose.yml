@@ -4,6 +4,7 @@
 
     db:
       image: postgres:15.3
+      # build: dvnovikov/django_app:postgres
       container_name: postgres_db
       restart: on-failure
       volumes:
@@ -24,6 +25,7 @@
 
     web:
       build: ./django_app
+      # build: dvnovikov/django_app:web
       container_name: django
       restart: on-failure
       command: sh -c "python manage.py migrate && python manage.py createsuperuser --noinput --username admin --email admin@example.com || echo 'Superuser already exists, skipping creation' && gunicorn django_app.wsgi:application --bind 0.0.0.0:8000"
@@ -43,8 +45,10 @@
         - ./.env.dev
       depends_on:
         - db
+    
     nginx:
       build: ./nginx
+      # build: dvnovikov/django_app:nginx
       container_name: nginx
       ports:
         - 8080:80
